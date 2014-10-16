@@ -35,7 +35,7 @@ bar = function(doubleArray){
 	var doubled = 0;
 	
 	for (var i = 0; i < doubleArray.length; i++) {
-			doubleArray[i] = doubleArray[i] * 2;
+		doubleArray[i] = doubleArray[i] * 2;
     if (!isNaN(doubleArray[i])) {
       doubled++;
     }
