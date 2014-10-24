@@ -1,0 +1,41 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="UTF-8">
+	  <title> Weather forecast </title>
+	  <script src='weather.js'></script>
+  </head>
+  <body>
+    <div>
+	  <form>
+	    <fieldset>
+		  <legend> Current Weather Information: </legend>
+		  Enter City: 
+		  <input type="text" id="cityID"><br>
+		   Select State: 
+		   <select id="stateID">
+		     <option value="WA">WA</option>
+		     <option value="OR">OR</option>
+			 <option value="CA">CA</option>
+			</select><br>
+			Check info needed: <br>
+							   <input type="checkbox" id="check1">Wind
+							   <input type="checkbox" id="check2"> Min Temp
+			                   <input type="checkbox" id="check3">Max Temp
+							   <input type="checkbox" id="check4">Current Temp<br>
+		    <input type="button" name="save" onclick="SaveAll()" value="Save Settings">
+			<input type="button" name="save" onclick="GetAll()" value="Get Weather">
+			<input type="button" name="save" onclick="clearStorage()" value="Clear local storage">
+		</fieldset>
+	 </form>
+	
+    <div name="output">
+			City: <div id="cityOUT"></div></br>
+			State: <div id="stateOUT"></div></br>
+			Wind Direction: <div id="windDIR"></div><br>Wind Speed: <div id="windSPD"></div></br>
+			Min Temp: <div id="minOUT"></div></br>
+			Max Temp: <div id="maxOUT"></div></br>
+			Current Temp: <div id="currOUT"></div></br>
+	</div>
+  </body>
+</html>
