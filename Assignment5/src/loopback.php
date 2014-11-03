@@ -1,32 +1,19 @@
 <?php
 header('Content-Type: text/plain');
 
-$myArr = array();
-$type = array(
-       'Type' => ''
-       );
 $params = array();
+$type = $_SERVER['REQUEST_METHOD'];
 
-if($_SERVER['REQUEST_METHOD'] === 'GET'){
-   $myArr['Type'] = 'GET';
-  }
-if ($_SERVER['REQUEST_METHOD'] === 'POST'){
-   $myArr['Type'] = 'POST';
-  }
-
-if ($myArr['Type'] === 'GET'){
-    foreach($_GET as $key => $value){
-       $params[$key] = $value;
-    } 
-else if {
-   foreach($_POST as $key => $value){
-       $params[$key] = $value;
-   }
-else if (empty($_GET){
-        if(empty($_POST){
-           $params[] = null;
-        }
-}
-$myArr['parameters'] = $params;
+if(empty($_GET) && empty($_POST)){
+    $params[] = null;
+   } else {
+    foreach ($_POST as $key => $value){
+    $params[$key] = $value;
+    }
+    foreach($_POST as $key => $value){
+    $params[$key] = $value;
+  } 
+}  
+$myArr = array('Type' => $type, 'parameters' => $params);
 echo JSON_encode($myArr);
 ?>
