@@ -1,7 +1,5 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-$db = new mysqli('oniddb.cws.oregonstate.edu', 'nguyminh-db', $password, 'nguyminh-db');
+$db = new mysqli('oniddb.cws.oregonstate.edu', 'nguyminh-db', '$Password', 'nguyminh-db');
 $records = array();
 
 if(!empty($_POST)){
@@ -10,14 +8,66 @@ if(!empty($_POST)){
     $category = trim($_POST['category']);
     $price    = trim($_POST['price']);
       if(!empty($name) && !empty($category) && !empty($price)){
-	$insert = $db->prepare("INSERT INTO inventory (name, category, price) VALUES (?, ?, ?)");
+        if(is_numeric($price) && $price < 1000){
+        $insert = $db->prepare("INSERT INTO inventory (name, category, price) VALUES (?, ?, ?)");
         $insert->bind_param('ssd', $name, $category, $price);
         if($insert->execute()){
+          $insert->close();
  	  header('Location: inventory.php');
-	}
-      } 
-   }
+	} else {
+          $insert->bind_result($name, $category, $price);
+          $count = 1;
+          $insert->close();
+          if(empty($price)){
+             $msg = "Price must be a number!";
+             echo "<script type='text/javascript'>alert('$msg');</script>";
+           } 
+          while ($count != 0){
+            $query = "SELECT COUNT(*) FROM inventory WHERE name = '$name'";
+            if($stmt = $db->prepare($query)){
+               $stmt->execute();
+               $stmt->close();
+               $stmt->bind_result($count);
+               $stmt->fetch();
+            } else {
+               die("Query error");
+            }
+           if($count != 0){
+           $message = "$name is used twice, please try again!";
+           echo "<script type='text/javascript'>alert('$message');</script>";
+           break;
+           }
+          }  
+        }     
+     } else {
+       $message = "price is an invalid entry, please try again";
+       echo "<script type='text/javascript'>alert('$message');</script>"; 
+     }
+    } else {
+        if(empty($name)){
+         $message = "name field is empty, please try again";
+         echo "<script type='text/javascript'>alert('$message');</script>";
+        }
+        if(empty($category)){
+         $message = "category field is empty, please try again";
+          echo "<script type='text/javascript'>alert('$message');</script>";
+        }
+        if(empty($price)){
+          $message = "price field is empty, please try again";
+          echo "<script type='text/javascript'>alert('$message');</script>";
+        }
+      }
+    }
 }
+
+
+if(isset($_POST['deleteAll'])){
+   $del = "TRUNCATE TABLE inventory";
+  if(!mysqli_query($db, $del)){
+       echo "deletion failed!";
+  }
+}
+   
 
 if(isset($_POST['delete'])){
   $id = $_POST['delete'];
@@ -48,7 +98,7 @@ if($results = $db->query("SELECT * FROM inventory")){
      <h3>Inventory</h3>
      <?php 
       if(!count($records)){
-           echo "no records";
+           echo "Table empty. Please enter in an inventory item";
           } else {
           ?>
      <table border='1px solid black'>
@@ -85,7 +135,7 @@ if($results = $db->query("SELECT * FROM inventory")){
 	
        <form action="" method="post">
 	 <fieldset>
-            <legend>Add products here</legend>
+            <legend>Add inventory here</legend>
 	   <div class="field">
 		<label for="name">name</label>
 		<input type="text" name="name" id="name">
@@ -98,7 +148,7 @@ if($results = $db->query("SELECT * FROM inventory")){
 		<label for="price">price</label>
 		<input type="text" name="price" id="price">
       	  </div>
-	     <input type="submit" value="Add Product">
+	     <input type="submit" value="Add inventory">
           </fieldset>
        </form>
 	
@@ -116,6 +166,13 @@ if($results = $db->query("SELECT * FROM inventory")){
 	      <input type="submit" value="Alter prices">
            </fieldset>
          </form>
+
+	<hr>
+	<form action="" method="post">
+               <div>
+		 <button type="submit" value="" name="deleteAll">Delete all products</button>
+ 	      </div>
+        </form>  	
     </body>
 </html>	
   	
