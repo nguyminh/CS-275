@@ -1,5 +1,5 @@
 <?php
-$db = new mysqli('oniddb.cws.oregonstate.edu', 'nguyminh-db', '$Password', 'nguyminh-db');
+$db = new mysqli('oniddb.cws.oregonstate.edu', 'nguyminh-db', $password, 'nguyminh-db');
 $records = array();
 
 if(!empty($_POST)){
@@ -157,16 +157,18 @@ if($results = $db->query("SELECT * FROM inventory")){
    	  <fieldset>
 	     <legend>Alter the price</legend>
              <div class="field">
-	        <select>
-		  <option value="1">1
- 		  <option value="2">2
+              <select>
+	        <?php foreach($records as $cat){
+                 ?> 
+               <option value="<?php echo ($cat->category);?>"><?php echo ($cat->category);?>
+               </option><?php } ?>
 		</select>
+                      
               <label for="percent">Enter in percent</label>
               <input type="text" name="alter">
 	      <input type="submit" value="Alter prices">
            </fieldset>
          </form>
-
 	<hr>
 	<form action="" method="post">
                <div>
