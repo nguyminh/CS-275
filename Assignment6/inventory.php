@@ -1,7 +1,7 @@
 <?php
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-$db = new mysqli('oniddb.cws.oregonstate.edu', 'nguyminh-db', 'dc0KvhgoUvO3fB2u', 'nguyminh-db');
+$db = new mysqli('oniddb.cws.oregonstate.edu', 'nguyminh-db', $password, 'nguyminh-db');
 $records = array();
 
 if(!empty($_POST)){
