@@ -13,10 +13,10 @@ if(!empty($_POST)){
     $category = trim($_POST['category']);
     $price    = trim($_POST['price']);
 //if all field is filled, do this block
-      if(!empty($name) && !empty($category) && !empty($price)){
+      if(!empty($name) && !empty($price)){
 //price must be numeric, and less than 1000 as specified       
         if(is_numeric($price) && $price < 1000){
-        $insert = $db->prepare("INSERT INTO inventory (name, category, price) VALUES (?, ?, ?)");
+        $insert = $db->prepare("INSERT INTO products (name, category, price) VALUES (?, ?, ?)");
         $insert->bind_param('ssd', $name, $category, $price);
         if($insert->execute()){
           $insert->bind_result($name, $category, $price);
@@ -29,7 +29,7 @@ if(!empty($_POST)){
           $insert->close();
 //while loop to check if name is used twice
           while ($count != 0){
-            $query = "SELECT COUNT(*) FROM inventory WHERE name = '$name'";
+            $query = "SELECT COUNT(*) FROM products WHERE name = '$name'";
             if($stmt = $db->prepare($query)){
                $stmt->execute();
                $stmt->close();
@@ -48,7 +48,7 @@ if(!empty($_POST)){
         }     
 //If price is not numeric or less than 1000, display error
      } else {
-       $message = "price is an invalid entry, please try again";
+       $message = "price must be a number, please try again";
        echo "<script type='text/javascript'>alert('$message');</script>"; 
      }
 //if any of the field is empty, display error
@@ -57,10 +57,10 @@ if(!empty($_POST)){
          $message = "name field is empty, please try again";
          echo "<script type='text/javascript'>alert('$message');</script>";
         }
-        if(empty($category)){
-         $message = "category field is empty, please try again";
-          echo "<script type='text/javascript'>alert('$message');</script>";
-        }
+//        if(empty($category)){
+//         $message = "category field is empty, please try again";
+//          echo "<script type='text/javascript'>alert('$message');</script>";
+//        }
         if(empty($price)){
           $message = "price field is empty, please try again";
           echo "<script type='text/javascript'>alert('$message');</script>";
@@ -74,11 +74,11 @@ if(isset($_POST['alter']) && isset($_POST['selected'])){
   $alter = (int)$_POST['alter'];
   $selected = $_POST['selected'];
      if(!empty($alter)){
-       if(is_numeric($alter) && $alter < 101){
+       if(is_numeric($alter)){
 //converts the number input into percentage
            $newAlter = ($alter / 100);
 //prepare statement that changes the price to price * percentage
-           $update = $db->prepare("UPDATE inventory SET price = (price * ?) WHERE category = ?");
+           $update = $db->prepare("UPDATE products SET price = (price * ?) WHERE category = ?");
            $update->bind_param('ds', $newAlter, $selected);
          if($update->execute()){
            $update->close();
@@ -99,7 +99,7 @@ if(isset($_POST['alter']) && isset($_POST['selected'])){
 
 //deleteALL button
 if(isset($_POST['deleteAll'])){
-   $del = "TRUNCATE TABLE inventory";
+   $del = "TRUNCATE TABLE products";
   if(!mysqli_query($db, $del)){
        echo "deletion failed!";
   }
@@ -108,7 +108,7 @@ if(isset($_POST['deleteAll'])){
 // deleting single rows button
 if(isset($_POST['delete'])){
   $id = $_POST['delete'];
-  $del = "DELETE FROM inventory WHERE id = ?";
+  $del = "DELETE FROM products WHERE id = ?";
   $delete = $db->prepare($del);
 //deletes row via id 
   $delete->bind_param('i', $id);
@@ -118,7 +118,7 @@ if(isset($_POST['delete'])){
 }
 
 //storing the array to populate in table
-if($results = $db->query("SELECT * FROM inventory")){
+if($results = $db->query("SELECT * FROM products")){
   if($results->num_rows){
     while($row = $results->fetch_object()){
       $records[] = $row;
@@ -128,7 +128,7 @@ if($results = $db->query("SELECT * FROM inventory")){
 
 //storing distinct categories for dropdown menu
 $types = array();
-if($results = $db->query("SELECT DISTINCT category FROM inventory")){
+if($results = $db->query("SELECT DISTINCT category FROM products")){
    if($results->num_rows){
       while($row = $results->fetch_object()){
          $types[] = $row;
