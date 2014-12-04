@@ -48,7 +48,7 @@ function showChat() {
   }
   REQ.open("GET", "chatOut.php", true);
   REQ.send();
-  setTimeout(showChat, 1000);
+  setTimeout(showChat, 50);
 }
 
 //ajax count function to display # of users
