@@ -10,6 +10,6 @@ $db = new mysqli('oniddb.cws.oregonstate.edu', 'nguyminh-db', $myPassword, 'nguy
 $results = $db->query("SELECT COUNT(*) FROM user");
 
 $row = $results->fetch_row();
-echo $row[0] . " user accounts created";
+echo $row[0] . " user accounts created on Chatter";
 
 ?>
