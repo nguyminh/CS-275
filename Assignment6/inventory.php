@@ -167,7 +167,7 @@ if($results = $db->query("SELECT DISTINCT category FROM products")){
 		<td><?php echo ($r->name);?></td>
 		<td><?php echo ($r->category);?></td>
 		<td>$<?php echo ($r->price);?></td>
-	        <td><form action="" method="post"> <?php // value must be equal to r-id so it can delete a unique id every new row ?>
+        <td><form action="" method="post"> <?php // value must be equal to r-id so it can delete a unique id every new row ?>
  		<button type="submit" value="<?php echo ($r->id);?>" name="delete">Delete</button>
 		</form>
 	      </tr>
